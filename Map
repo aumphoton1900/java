@@ -1,0 +1,20 @@
+1.
+A LinkedHashMap maintains the insertion order of elements, making it suitable for scenarios where you need to remember the order 
+in which items were added, while a TreeMap maintains elements in sorted key order, providing a data structure that 
+is automatically sorted by its keys. LinkedHashMap uses a doubly linked list alongside a hash table for O(1) average time 
+complexity for basic operations, whereas TreeMap uses a Red-Black Tree for O(log N) time complexity due to its sorting requirement.  
+
+LinkedHashMap
+Order: Preserves the order in which keys were inserted. 
+Performance: Offers O(1) average time complexity for basic operations (get, put, remove). 
+Internal Structure: Combines a hash table with a doubly linked list. 
+Nulls: Allows one null key and multiple null values. 
+Use Case: Ideal when you need the order of insertion to be maintained, for example, in a cache that needs to remember access order. 
+
+TreeMap
+Order: Stores keys in sorted order (ascending by default, or using a custom Comparator). 
+Performance: Has O(log N) time complexity for basic operations, as it needs to maintain the sorted structure. 
+Internal Structure: Implemented using a self-balancing Red-Black Tree. 
+Nulls: Does not permit null keys but allows multiple null values. 
+Use Case: Best for situations where you require an automatically sorted collection of keys, such as iterating through a list of items in a specific, sorted sequence. 
+
