@@ -1,1 +1,240 @@
+1]
 
+package SerializationExamples_01;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+
+class ChildClass1 extends BaseClass1 {
+	private static final long serialVersionUID = 1L; // Recommended for versioning
+	String childName;
+
+	public ChildClass1(int baseValue, String childName) {
+		super(baseValue);
+		this.childName = childName;
+	}
+
+	public String getChildName() {
+		return childName;
+	}
+}
+
+
+
+class ChildClass extends BaseClass implements Serializable {
+	private static final long serialVersionUID = 1L; // Recommended for versioning
+	String childName;
+
+	public ChildClass(int baseValue, String childName) {
+		super(baseValue);
+		this.childName = childName;
+	}
+
+	public String getChildName() {
+		return childName;
+	}
+}
+
+//Non-serializable base class
+class BaseClass {
+	int baseValue;
+
+	public BaseClass() {
+		// Default constructor is crucial for deserialization
+		this.baseValue = 0;
+	}
+
+	public BaseClass(int baseValue) {
+		this.baseValue = baseValue;
+	}
+
+	public int getBaseValue() {
+		return baseValue;
+	}
+}
+
+//Non-serializable base class
+class BaseClass1 implements Serializable {
+	int baseValue;
+
+	public BaseClass1() {
+		// Default constructor is crucial for deserialization
+		this.baseValue = 0;
+	}
+
+	public BaseClass1(int baseValue) {
+		this.baseValue = baseValue;
+	}
+
+	public int getBaseValue() {
+		return baseValue;
+	}
+}
+
+public class SerializationExample {
+
+	public static void main01(String[] args) {
+		ChildClass originalChild = new ChildClass(100, "Serializable Child");
+
+		String path ="C://Users//NatwarKumar//Activity//daily//tasks//child.ser";
+		// Serialize the ChildClass object
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+			oos.writeObject(originalChild);
+			System.out.println("ChildClass object serialized successfully.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Deserialize the ChildClass object
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
+			ChildClass deserializedChild = (ChildClass) ois.readObject();
+			System.out.println("ChildClass object deserialized successfully.");
+
+			System.out.println("Deserialized Base Value: " + deserializedChild.getBaseValue());
+			System.out.println("Deserialized Child Name: " + deserializedChild.getChildName());
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void main(String[] args) {
+		ChildClass1 originalChild = new ChildClass1(100, "Serializable Child");
+
+		String path ="C://Users//NatwarKumar//Activity//daily//tasks//child.ser";
+		// Serialize the ChildClass object
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+			oos.writeObject(originalChild);
+			System.out.println("ChildClass object serialized successfully.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Deserialize the ChildClass object
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
+			ChildClass1 deserializedChild = (ChildClass1) ois.readObject();
+			System.out.println("ChildClass object deserialized successfully.");
+
+			System.out.println("Deserialized Base Value: " + deserializedChild.getBaseValue());
+			System.out.println("Deserialized Child Name: " + deserializedChild.getChildName());
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+case- 01 : base class is  serailizable but child class missing serializable interface. 
+ChildClass object serialized successfully.
+ChildClass object deserialized successfully.
+Deserialized Base Value: 100
+Deserialized Child Name: Serializable Child
+
+
+case - 02 : child class implements serializable but  base class missing serializable 
+      02.01 : base class has default constructor 
+        ChildClass object serialized successfully.
+        ChildClass object deserialized successfully.
+        Deserialized Base Value: 0
+        Deserialized Child Name: Serializable Child
+
+BaseClass (Non-Serializable): This class does not implement the Serializable interface. It has a baseValue field and a constructor. 
+Crucially, it includes a no-argument (default) constructor. This is essential for the deserialization process.
+
+ChildClass (Serializable): This class extends BaseClass and implements the Serializable interface. It has its own field, childName.
+Serialization: 
+When a ChildClass object is serialized, only the fields declared in ChildClass (like childName) are written to the output stream directly. 
+The fields of the non-serializable BaseClass are not serialized.
+
+Deserialization: During deserialization, the JVM first reconstructs the non-serializable BaseClass by invoking its no-argument constructor. 
+If BaseClass did not have a no-argument constructor, a InvalidClassException would be thrown during deserialization. 
+After the BaseClass portion is constructed, the deserialization mechanism then populates the fields of ChildClass (like childName) 
+from the serialized data. The baseValue from the BaseClass will reflect the value set by its constructor during deserialization, 
+not the value it had in the original object before serialization.
+
+ 02.02 : base class has one arg constructor (let) 
+
+
+class ChildClass extends BaseClass implements Serializable {
+	private static final long serialVersionUID = 1L; // Recommended for versioning
+	String childName;
+
+	public ChildClass(int baseValue, String childName) {
+		super(baseValue,childName);
+		this.childName = childName;
+	}
+
+	public String getChildName() {
+		return childName;
+	}
+}
+-----------------------
+//Non-serializable base class
+class BaseClass {
+	int baseValue;
+    String baseValue2;
+	 
+	//public BaseClass() {
+		// Default constructor is crucial for deserialization
+	//	this.baseValue = 0;
+	//}
+
+    public BaseClass(int a,String d) {
+    	this.baseValue = a ;
+    	this.baseValue2 = d;
+    }
+    
+	public BaseClass(int baseValue) {
+		this.baseValue = baseValue;
+	}
+
+	public int getBaseValue() {
+		return baseValue;
+	}
+}
+
+public static void main(String[] args) {
+		ChildClass originalChild = new ChildClass(100, "Serializable Child");
+
+		String path ="C://Users//NatwarKumar//Activity//daily//tasks//child.ser";
+		// Serialize the ChildClass object
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+			oos.writeObject(originalChild);
+			System.out.println("ChildClass object serialized successfully.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Deserialize the ChildClass object
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
+			ChildClass deserializedChild = (ChildClass) ois.readObject();
+			System.out.println("ChildClass object deserialized successfully.");
+
+			System.out.println("Deserialized Base Value: " + deserializedChild.getBaseValue());
+			System.out.println("Deserialized Child Name: " + deserializedChild.getChildName());
+
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+ChildClass object serialized successfully.
+java.io.InvalidClassException: SerializationExamples_01.ChildClass; no valid constructor
+at java.base/java.io.ObjectStreamClass$ExceptionInfo.newInvalidClassException(ObjectStreamClass.java:172)
+
+
+Deserialization: During deserialization, the JVM first reconstructs the non-serializable BaseClass by invoking its no-argument constructor. 
+If BaseClass did not have a no-argument constructor, a InvalidClassException would be thrown during deserialization. 
+After the BaseClass portion is constructed, the deserialization mechanism then populates the fields of ChildClass (like childName) from the serialized data. 
+The baseValue from the BaseClass will reflect the value set by its constructor during deserialization, 
+not the value it had in the original object before serialization.
+
+
+==============================================
