@@ -136,6 +136,8 @@ ChildClass object deserialized successfully.
 Deserialized Base Value: 100
 Deserialized Child Name: Serializable Child
 
+------------------------------------------------------------------------------------------------
+
 
 case - 02 : child class implements serializable but  base class missing serializable 
       02.01 : base class has default constructor 
