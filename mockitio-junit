@@ -1,0 +1,12 @@
+1. test arrays in java 
+    @Test
+    void testMethodReturningArray() {
+        String[] mockArray = {"item1", "item2"};
+        Mockito.when(myRepository.getArrayOfStrings()).thenReturn(mockArray);
+
+        String[] result = myService.processArray(); // Assuming MyService calls myRepository.getArrayOfStrings()
+
+        // Assertions on the result array
+        Assertions.assertArrayEquals(mockArray, result);
+    }
+
