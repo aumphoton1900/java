@@ -1,0 +1,28 @@
+Java 11's key changes include significant feature removals like the Java EE and CORBA modules, JavaFX, and the Java Deployment Technologies,
+  along with new features such as the Epsilon garbage collector, enhancements to the String class, and the ability to run Java source files 
+  directly from the command line. Notable architectural changes include the removal of the JRE, making auto-updates unavailable, and 
+  the unification of the JDK with the Java runtime environment. 
+
+New and Enhanced Features
+  
+   Epsilon: A No-Op Garbage Collector (JEP 318): A garbage collector that performs no allocation and can be used for performance-critical applications where 
+  garbage collection is not needed.
+
+  New String Methods: Introduction of new String methods like isBlank(), lines(), strip(), stripLeading(), stripTrailing(), and repeat().
+Local-Variable Syntax for Lambda Parameters (JEP 323): Allows the use of var (local-variable syntax) in the parameters of a lambda expression.
+
+Run Java File from Command Line: A single command java FileName.java can now execute a Java source file.
+Java Flight Recorder (JFR) (JEP 328): Becomes an open-source feature of the JDK, providing a powerful tool for profiling and diagnosing running JVMs. 
+Removed Features and Modules
+
+  Java EE and CORBA Modules: The Java EE and CORBA modules, which were deprecated in Java 9, were removed in Java 11.
+  
+  Java Deployment Technologies: Features like Java Web Start, the Applet Viewer, and the Java Plugin were removed.
+Oracle JDK's JRE and Server JRE: These standalone downloads were removed by Oracle, and auto-update is no longer available. 
+
+Other Key Changes
+Unified JDK: The JDK now includes the Java runtime environment, eliminating the need for a separate JRE download.
+Support for Unicode 10.0: Java 11 includes support for Unicode version 10.0.
+Dynamic Class-File Constants (JEP 309): Adds support for dynamic class-file constants. 
+
+  
