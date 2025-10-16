@@ -1,5 +1,17 @@
 https://www.programiz.com/dsa/fibonacci-heap
 
+Applications of Graphs
+Breadth first search and depth first search
+Breadth-first search (BFS) and depth-first search (DFS) are two closely related 
+approaches that are used for exploring all of the nodes in a given connected component. 
+Both start with an arbitrary node, the "root"[14]. Strongly connected components can 
+also be found using graph traversals using algorithms such as Kosaraju's algorithm, which is a modified DFS.
+
+
+Pathfinding
+Dijkstra's Algorithm is a Pathfinding Algorithm that can be used on a positively-weighted (meaning all edge weights must be greater than or equal to 0) and/or directed graphs. This can be used to find the shortest path between two arbitrarily chosen nodes which is commonly applied in routing problems.
+
+
 1. graph traversal
   https://medium.com/basecs/deep-dive-through-a-graph-dfs-traversal-8177df5d0f13
   https://medium.com/basecs/going-broad-in-a-graph-bfs-traversal-959bd1a09255
