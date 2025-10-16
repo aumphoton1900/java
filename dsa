@@ -28,7 +28,8 @@ Auxiliary Space: O(E+V) where V is the number of vertex and E is the number of e
 Advantages:
 
 Prim's algorithm is guaranteed to find the MST in a connected, weighted graph.
-It has a time complexity of O((E+V)*log(V)) using a binary heap or Fibonacci heap, where E is the number of edges and V is the number of vertices.
+It has a time complexity of O((E+V)*log(V)) using a binary heap or Fibonacci heap, where E is the number of edges and 
+V is the number of vertices.
 It is a relatively simple algorithm to understand and implement compared to some other MST algorithms.
 Disadvantages:
 
@@ -54,12 +55,9 @@ the shortest path to the desired vertex is found.
 Key Steps of the Algorithm
 
 Initialize the distance of the source vertex to 0 and all other vertices to infinity.
-
 Select the unvisited vertex with the smallest distance as the current vertex.
-
 For each unvisited neighbor of the current vertex, calculate the tentative distance through the current vertex. 
 If this distance is smaller than the previously known distance, update it.
-
 Mark the current vertex as visited.
 Repeat steps 2–4 until all vertices are visited or the shortest path to the target vertex is determined
 
@@ -89,3 +87,30 @@ solving shortest path problems in graphs with non-negative weights.
 
 3.1] The Bellman-Ford Algorithm (Step-by-Step Example)
 https://www.youtube.com/watch?v=YTUO8MD1q0E
+
+Limitations
+The algorithm cannot handle graphs with negative weight cycles for 
+shortest path calculations, as the distances keep decreasing indefinitely. However, it can detect such cycles efficiently.
+The Bellman-Ford algorithm is a single-source shortest path algorithm that works on graphs with negative edge weights. 
+It is particularly useful for detecting negative weight cycles. The runtime of the algorithm depends on the number of 
+vertices (V) and edges (E) in the graph.
+
+Time Complexity
+The Bellman-Ford algorithm has a time complexity of O(V * E) in the worst case. This is because the algorithm performs (V - 1) iterations 
+of edge relaxation, where each iteration processes all edges in the graph.
+Worst Case: O(V * E). This occurs when the graph requires all (V - 1) iterations to compute the shortest paths, such as in cases with complex edge arrangements or near-negative cycles.
+Best Case: O(E). If the shortest paths are found in the first iteration and no further updates are needed, the algorithm can terminate early.
+Average Case: O(V * E). On average, the algorithm processes all edges for (V - 1) iterations.
+
+Space Complexity
+The space complexity of the Bellman-Ford algorithm is O(V). 
+This is because it maintains a distance array to store the shortest path estimates for each vertex.
+
+Key Factors Affecting Runtime
+Number of Edges (E): The runtime scales linearly with the number of edges processed in each iteration.
+Number of Vertices (V): The algorithm performs (V - 1) iterations of edge relaxation.
+Graph Structure: Sparse graphs (fewer edges) result in faster execution compared to dense graphs.
+
+Practical Considerations
+The Bellman-Ford algorithm is slower than Dijkstra's algorithm for graphs without negative weights due to its O(V * E) complexity. 
+However, it is preferred when negative weights are present or when detecting negative weight cycles is required.
