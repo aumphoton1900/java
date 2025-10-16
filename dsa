@@ -9,7 +9,9 @@ also be found using graph traversals using algorithms such as Kosaraju's algorit
 
 
 Pathfinding
-Dijkstra's Algorithm is a Pathfinding Algorithm that can be used on a positively-weighted (meaning all edge weights must be greater than or equal to 0) and/or directed graphs. This can be used to find the shortest path between two arbitrarily chosen nodes which is commonly applied in routing problems.
+Dijkstra's Algorithm is a Pathfinding Algorithm that can be used on a positively-weighted 
+(meaning all edge weights must be greater than or equal to 0) and/or directed graphs. 
+This can be used to find the shortest path between two arbitrarily chosen nodes which is commonly applied in routing problems.
 
 
 1. graph traversal
