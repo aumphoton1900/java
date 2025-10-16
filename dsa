@@ -3,4 +3,36 @@
   https://medium.com/basecs/going-broad-in-a-graph-bfs-traversal-959bd1a09255
 
 
-  
+
+2.MST
+prims 
+A group of edges that connects two sets of vertices in a graph is called Articulation Points (or Cut Vertices) in graph theory. 
+So, at every step of Prim’s algorithm, find a cut,
+pick the minimum weight edge from the cut, and include this vertex in MST Set (the set that contains already included vertices).
+
+
+Working of the Prim's Algorithm
+Step 1: Determine an arbitrary vertex as the starting vertex of the MST. We pick 0 in the below diagram.
+Step 2: Follow steps 3 to 5 till there are vertices that are not included in the MST (known as fringe vertex).
+Step 3: Find edges connecting any tree vertex with the fringe vertices.
+Step 4: Find the minimum among these edges.
+Step 5: Add the chosen edge to the MST. Since we consider only the edges that connect fringe vertices with the rest, we never get a cycle.
+Step 6: Return the MST and exit
+
+Adj List / Priority oQueue
+Time Complexity: O((E+V)*log(V)) where V is the number of vertex and E is the number of edges
+Auxiliary Space: O(E+V) where V is the number of vertex and E is the number of edges
+
+Advantages:
+
+Prim's algorithm is guaranteed to find the MST in a connected, weighted graph.
+It has a time complexity of O((E+V)*log(V)) using a binary heap or Fibonacci heap, where E is the number of edges and V is the number of vertices.
+It is a relatively simple algorithm to understand and implement compared to some other MST algorithms.
+Disadvantages:
+
+Like Kruskal's algorithm, Prim's algorithm can be slow on dense graphs with many edges, as it requires iterating over all edges at least once.
+Prim's algorithm relies on a priority queue, which can take up extra memory and slow down the algorithm on very large graphs.
+The choice of starting node can affect the MST output, which may not be desirable in some applications.
+
+
+
