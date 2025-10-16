@@ -88,9 +88,7 @@ solving shortest path problems in graphs with non-negative weights.
 3.1] The Bellman-Ford Algorithm (Step-by-Step Example)
 https://www.youtube.com/watch?v=YTUO8MD1q0E
 
-Limitations
-The algorithm cannot handle graphs with negative weight cycles for 
-shortest path calculations, as the distances keep decreasing indefinitely. However, it can detect such cycles efficiently.
+
 The Bellman-Ford algorithm is a single-source shortest path algorithm that works on graphs with negative edge weights. 
 It is particularly useful for detecting negative weight cycles. The runtime of the algorithm depends on the number of 
 vertices (V) and edges (E) in the graph.
@@ -114,3 +112,7 @@ Graph Structure: Sparse graphs (fewer edges) result in faster execution compared
 Practical Considerations
 The Bellman-Ford algorithm is slower than Dijkstra's algorithm for graphs without negative weights due to its O(V * E) complexity. 
 However, it is preferred when negative weights are present or when detecting negative weight cycles is required.
+
+Limitations
+The algorithm cannot handle graphs with negative weight cycles for 
+shortest path calculations, as the distances keep decreasing indefinitely. However, it can detect such cycles efficiently.
