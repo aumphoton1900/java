@@ -36,5 +36,54 @@ Like Kruskal's algorithm, Prim's algorithm can be slow on dense graphs with many
 Prim's algorithm relies on a priority queue, which can take up extra memory and slow down the algorithm on very large graphs.
 The choice of starting node can affect the MST output, which may not be desirable in some applications.
 
+3.
+dijikastra
+https://www.youtube.com/watch?v=1YF9Gdb9MTk
+
+Dijkstra's Algorithm is a greedy algorithm used to solve the single-source shortest path problem in a graph 
+with non-negative edge weights. It calculates the shortest path from a source vertex to all other vertices in the graph. 
+This algorithm was developed by Edsger W. Dijkstra in 1956.
+
+The algorithm works by maintaining two sets of vertices: one for visited vertices (whose shortest distance from the 
+source is finalized) and another for unvisited vertices. It iteratively selects the unvisited vertex with the smallest tentative distance, 
+updates the distances of its neighbors, and marks it as visited. This process continues until all vertices are visited or 
+the shortest path to the desired vertex is found.
+
+
+
+Key Steps of the Algorithm
+
+Initialize the distance of the source vertex to 0 and all other vertices to infinity.
+
+Select the unvisited vertex with the smallest distance as the current vertex.
+
+For each unvisited neighbor of the current vertex, calculate the tentative distance through the current vertex. 
+If this distance is smaller than the previously known distance, update it.
+
+Mark the current vertex as visited.
+Repeat steps 2–4 until all vertices are visited or the shortest path to the target vertex is determined
+
+
+
+
+Characteristics and Limitations
+
+Time Complexity: O(V²) for a dense graph using an adjacency matrix. With a priority queue (e.g., Min-Heap), 
+it improves to O(V log V + E), where V is the number of vertices and E is the number of edges
+
+Graph Type: Works for both directed and undirected graphs but requires non-negative edge weights.
+
+Negative Weights: Dijkstra's Algorithm fails for graphs with negative edge weights because 
+it assumes that once a vertex's shortest distance is finalized, it cannot be updated. For such cases, the Bellman-Ford Algorithm is used
+
+Applications
+
+Dijkstra's Algorithm is widely used in:
+Routing protocols (e.g., OSPF in networking).
+
+GPS navigation systems for finding the shortest route.
+Graph-based problem-solving in robotics, games, and logistics
+This algorithm is a cornerstone of graph theory and remains one of the most efficient methods for 
+solving shortest path problems in graphs with non-negative weights.
 
 
