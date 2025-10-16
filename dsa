@@ -37,6 +37,8 @@ Like Kruskal's algorithm, Prim's algorithm can be slow on dense graphs with many
 Prim's algorithm relies on a priority queue, which can take up extra memory and slow down the algorithm on very large graphs.
 The choice of starting node can affect the MST output, which may not be desirable in some applications.
 
+===================================
+
 3.
 dijikastra
 https://www.youtube.com/watch?v=1YF9Gdb9MTk
@@ -85,6 +87,9 @@ This algorithm is a cornerstone of graph theory and remains one of the most effi
 solving shortest path problems in graphs with non-negative weights.
 
 
+
+
+
 3.1] The Bellman-Ford Algorithm (Step-by-Step Example)
 https://www.youtube.com/watch?v=YTUO8MD1q0E
 
@@ -120,4 +125,11 @@ shortest path calculations, as the distances keep decreasing indefinitely. Howev
 [USAGE]
 Bellman-Ford algorithm allows you to check whether there exists a cycle of negative weight in the graph, 
 and if it does, find one of these cycles.
+
+=========================================
+04.
+
+04.01
+floyd-warshall-algorithm
+
 
