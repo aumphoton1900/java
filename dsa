@@ -116,3 +116,8 @@ However, it is preferred when negative weights are present or when detecting neg
 Limitations
 The algorithm cannot handle graphs with negative weight cycles for 
 shortest path calculations, as the distances keep decreasing indefinitely. However, it can detect such cycles efficiently.
+
+[USAGE]
+Bellman-Ford algorithm allows you to check whether there exists a cycle of negative weight in the graph, 
+and if it does, find one of these cycles.
+
