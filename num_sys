@@ -6,4 +6,8 @@ reading the remainders from bottom to top.
 The fractional part is converted using successive multiplication by 2, 
 reading the integer parts from top to bottom. 
 
+2] decimal to binar /2.
+   decimal to octal /8.
+
+
 
