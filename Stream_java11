@@ -1,0 +1,19 @@
+
+1. 
+ numbers = Arrays.asList(10, 20, 30, 40, 50);
+		double average = numbers.stream()
+		    .mapToInt(Integer::intValue)
+		    .average()
+		    .orElse(0.0);
+		System.out.println(average); // Output: 30.0
+
+2. 
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+		int sum = numbers.stream()
+		    .mapToInt(Integer::intValue)
+		    .sum();
+		
+		int s1 = numbers.stream().reduce(0, Integer::sum);
+		System.out.println(s1); // Output: 15
+
+3.
