@@ -9,5 +9,14 @@ reading the integer parts from top to bottom.
 2] decimal to binar /2.
    decimal to octal /8.
 
+3]
+Example 3: Converting \(0.52_{10}\) to octal     
+Step 1: Multiply the fraction by 8: \(0.52\times 8=4.16\) Integer Part: \(4\). 
+New fractional part: \(0.16\).  Step 2: Multiply the new fractional part by 8: \(0.16\times 8=1.28\) 
+Integer Part: \(1\). New fractional part: \(0.28\).  
+Step 3: Multiply the new fractional part by 8: \(0.28\times 8=2.24\) Integer Part: \(2\). 
+New fractional part: \(0.24\).  Step 4: Multiply the new fractional part by 8: \(0.24\times 8=1.92\) Integer Part: \(1\). 
+New fractional part: \(0.92\).  
+Octal conversion: The integer parts are \(4,1,2,1...\) so the octal conversion is \(0.4121..._{8}\). 
 
 
