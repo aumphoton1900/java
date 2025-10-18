@@ -1,1 +1,8 @@
+1.]
+ To convert a fractional decimal to binary, 
+you convert the integer and fractional parts separately. 
+The integer part is converted using successive division by 2, 
+reading the remainders from bottom to top. 
+The fractional part is converted using successive multiplication by 2, 
+reading the integer parts from top to bottom. 
 
