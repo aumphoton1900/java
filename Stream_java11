@@ -17,3 +17,12 @@ List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
 		System.out.println(s1); // Output: 15
 
 3.
+//	Question: Find the longest word in a sentence using Streams.
+
+		String sentence = "Java Stream API is very powerful";
+		String longestWord = Arrays.stream(sentence.split(" "))
+		    .max(Comparator.comparingInt(String::length))
+		    .orElse(null);
+		System.out.println(longestWord); // Output: powerful
+
+
