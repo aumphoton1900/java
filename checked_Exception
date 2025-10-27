@@ -1,0 +1,8 @@
+1.) 
+  Checked exceptions are those that must be either handled or declared in the method signature. 
+  ClassNotFoundException is a checked exception , 
+  because it indicates a failure to find a class at runtime, 
+  which can be anticipated and should be properly managed by developers.
+
+
+    
