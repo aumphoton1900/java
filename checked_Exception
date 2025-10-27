@@ -4,5 +4,25 @@
   because it indicates a failure to find a class at runtime, 
   which can be anticipated and should be properly managed by developers.
 
+Example-01 
+package Proj_01;
+
+public class CheckedExcetion_Example01 {
+
+	public static void main(String[] args)  {
+		// TODO Auto-generated method stub
+		//Unhandled exception type ClassNotFoundException | red cross on line number-08
+		 Class.forName("Proj_01.Example_01");
+		}
+}
+line number - 15 is a compile time exception 
+
+Causes
+ClassNotFoundException is thrown when the JVM cannot find a specified class in the classpath, 
+often due to incorrect paths or missing libraries.
+This exception can also occur when using reflection to load classes dynamically, and the specified class does not exist.
+
+
+
 
     
