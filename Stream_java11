@@ -25,7 +25,7 @@ List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
 		    .orElse(null);
 		System.out.println(longestWord); // Output: powerful
 
-4. let say there is List of map . see below example : 
+4. let say there is List of map . see below example , find sum of all double values : 
 Map<String, Double> map = new HashMap<String,Double> ();
 	map.put("1",100.00);
 	map.put("2",110.00);
