@@ -25,4 +25,16 @@ List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
 		    .orElse(null);
 		System.out.println(longestWord); // Output: powerful
 
+4. let say there is List of map . see below example : 
+Map<String, Double> map = new HashMap<String,Double> ();
+	map.put("1",100.00);
+	map.put("2",110.00);
+	map.put("3",120.00);
+	map.put("4",130.00);
+	
+	List<Map<String, Double>> l = new ArrayList<>();
+	l.add(map);
+	
+	double sum =l.stream().flatMap( x -> x.entrySet().stream()).map( x -> x.getValue()).reduce(0.0,Double::sum);
+	System.out.println(" sum "+sum);
 
