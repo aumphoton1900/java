@@ -1,0 +1,6 @@
+1)
+
+java.lang.NoClassDefFoundError  is a Error in java. 
+Error and its subclasses are regarded as unchecked exceptions in java.
+
+https://www.javamadesoeasy.com/2015/12/how-to-solve-javalangnoclassdeffounderr.html
