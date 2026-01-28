@@ -38,3 +38,110 @@ Map<String, Double> map = new HashMap<String,Double> ();
 	double sum =l.stream().flatMap( x -> x.entrySet().stream()).map( x -> x.getValue()).reduce(0.0,Double::sum);
 	System.out.println(" sum "+sum);
 
+
+5.
+A short-circuiting terminal operation in Java Streams is a terminal operation that can complete its execution 
+without necessarily processing all elements in the stream. These operations can produce a result as soon as 
+a specific condition is met, even if there are more elements in the stream. This can lead to significant performance benefits, 
+especially with large or infinite streams, as unnecessary computations are avoided.
+
+Here are the primary short-circuiting terminal operations in Java Streams:
+
+   1. anyMatch(Predicate<? super T> predicate):
+
+Returns true as soon as any element in the stream matches the given predicate.
+The stream processing stops immediately after the first match is found.
+JAVA
+
+import java.util.Arrays;
+import java.util.List;
+
+List<String> names = Arrays.asList("Babe", "Charlie", "David", "Alice");
+// This will stop as soon as "Charlie" is checked
+boolean hasLongName = names.stream()
+    .peek(name -> System.out.println("Checking anyMatch: " + name)) // For demonstration
+    .anyMatch(name -> name.length() > 5);
+
+System.out.println("Contains name longer than 5? " + hasLongName);
+// Output might be:
+// Checking anyMatch: Babe
+// Checking anyMatch: Charlie
+// Contains name longer than 5? true
+allMatch(Predicate<? super T> predicate):
+
+Returns true only if all elements in the stream match the given predicate.
+It short-circuits and returns false as soon as one element is found that does not match the predicate.
+JAVA
+
+List<Integer> numbers = Arrays.asList(2, 4, 6, 8, 9, 10);
+// This will stop as soon as 9 is encountered
+boolean allEven = numbers.stream()
+    .peek(num -> System.out.println("Checking allMatch: " + num)) // For demonstration
+    .allMatch(num -> num % 2 == 0);
+
+System.out.println("All numbers are even? " + allEven);
+// Output might be:
+// Checking allMatch: 2
+// Checking allMatch: 4
+// Checking allMatch: 6
+// Checking allMatch: 8
+// Checking allMatch: 9
+// All numbers are even? false
+noneMatch(Predicate<? super T> predicate):
+
+Returns true only if no elements in the stream match the given predicate.
+It short-circuits and returns false as soon as one element is found that does match the predicate.
+JAVA
+
+List<String> words = Arrays.asList("apple", "banana", "cat", "dog");
+// This will stop as soon as "cat" is found
+boolean noCWords = words.stream()
+    .peek(word -> System.out.println("Checking noneMatch: " + word)) // For demonstration
+    .noneMatch(word -> word.startsWith("c"));
+
+System.out.println("No words start with 'c'? " + noCWords);
+// Output might be:
+// Checking noneMatch: apple
+// Checking noneMatch: banana
+// Checking noneMatch: cat
+// No words start with 'c'? false
+findFirst():
+
+Returns an Optional<T> describing the first element of this stream, or an empty Optional if the stream is empty.
+The stream pipeline stops processing as soon as the first element is found.
+JAVA
+
+import java.util.Optional;
+
+List<String> items = Arrays.asList("Two", "One", "Three");
+Optional<String> first = items.stream()
+    .peek(item -> System.out.println("Checking findFirst: " + item)) // For demonstration
+    .findFirst();
+
+System.out.println("First element: " + first);
+// Output:
+// Checking findFirst: Two
+// First element: Optional[Two]
+findAny():
+
+Returns an Optional<T> describing some element of the stream, or an empty Optional if the stream is empty.
+Unlike findFirst, findAny makes fewer guarantees about which element is returned, especially in parallel streams. 
+This flexibility allows for potentially more efficient execution in parallel environments, 
+as it doesn't need to wait for the "first" element in a defined order.
+
+JAVA
+
+List<String> items = Arrays.asList("A", "B", "C", "D");
+// In a sequential stream, often returns the first. In parallel, it's non-deterministic.
+Optional<String> any = items.stream()
+    .parallel() // Using parallel for demonstration of findAny's purpose
+    .peek(item -> System.out.println("Checking findAny: " + item)) // Order not guaranteed
+    .findAny();
+
+System.out.println("Any element: " + any);
+// Output order of "Checking findAny" will vary, but findAny will return one.
+These short-circuiting terminal operations are powerful tools for efficiently querying streams when you don't need to process 
+every single element to get your result. They align with general Google best practices on performance by doing only the necessary work.
+
+
+
