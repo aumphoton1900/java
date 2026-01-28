@@ -31,3 +31,77 @@ Choose Collections.synchronizedList(new ArrayList()) when:
 Write operations are frequent, or comparable to read operations: The overhead of copying in CopyOnWriteArrayList would be detrimental.
 You need strong consistency during iteration: Fail-fast iterators are preferred to detect concurrent modifications.
 List size can be very large: Copying large arrays frequently would be inefficient.
+
+
+Question 1: Which of the following ExecutorService factory methods from Executors is generally discouraged in production code at Google, and why?
+
+A) Executors.newFixedThreadPool(int nThreads)
+B) Executors.newCachedThreadPool()
+C) Executors.newSingleThreadExecutor()
+D) Executors.newWorkStealingPool()
+
+Correct Answer: B) Executors.newCachedThreadPool()
+
+Explanation: Executors.newCachedThreadPool() creates an ExecutorService that can spawn an unbounded number of threads. 
+If tasks are submitted at a rate faster than they can be executed, this can lead to an excessive number of threads being created, 
+potentially causing resource exhaustion, application instability, and OutOfMemoryErrors in a production environment. 
+Fixed-size pools (like those created by newFixedThreadPool) or other bounded pool mechanisms are generally preferred for better resource control.
+
+Question 2: Consider the following CompletableFuture code snippet:
+
+JAVA
+
+CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> "Hello");
+CompletableFuture<String> future2 = future1.thenApply(s -> s + " World");
+CompletableFuture<Void> future3 = future2.thenAccept(System.out::println);
+Which statement is true about the execution model of the thenApply and thenAccept stages in this Java 8 code?
+
+A) All stages (supplyAsync, thenApply, thenAccept) always execute on the ForkJoinPool.commonPool().
+B) thenApply and thenAccept execute on the same thread that completes the preceding stage (future1 or future2).
+C) Each stage runs on a new, independent thread.
+D) thenApply and thenAccept always execute asynchronously on a separate thread from the previous stage.
+
+Correct Answer: B) thenApply and thenAccept execute on the same thread that completes the preceding stage (future1 or future2).
+
+Explanation: Unless an Executor is explicitly provided (e.g., using thenApplyAsync(Function, Executor)), synchronous completion stages like thenApply and thenAccept execute on the thread that completes the upstream CompletableFuture. In this case, supplyAsync likely runs on a thread from ForkJoinPool.commonPool(). When future1 completes, the thenApply stage will execute on that same thread. Similarly, when future2 completes, thenAccept runs on the thread that completed future2. This is important because long-running or blocking work within thenApply or thenAccept can tie up threads from the pool used by the preceding stage.
+
+Question 3: You have a method computeAsync() that returns a ListenableFuture<Result> (a common asynchronous primitive at Google). You need to apply a non-blocking transformation transform(Result) to its result. According to Google's concurrency best practices, which approach is best?
+
+A) Futures.transform(computeAsync(), result -> transform(result), MoreExecutors.directExecutor())
+B) computeAsync().addListener(() -> transform(Futures.getUnchecked(computeAsync())), myExecutor)
+C) Futures.transform(computeAsync(), result -> transform(result), myExecutor)
+D) Calling computeAsync().get() and then transform() on the result.
+
+Correct Answer: C) Futures.transform(computeAsync(), result -> transform(result), myExecutor)
+
+Explanation: Using Futures.transform with a specific Executor (myExecutor) is the recommended way to asynchronously transform the result of a ListenableFuture. This ensures the transform function is executed on a controlled thread pool, preventing it from potentially blocking a critical thread.
+
+A is incorrect because using MoreExecutors.directExecutor() is generally discouraged as it executes the transformation on the thread that completes computeAsync(). This can lead to unexpected thread blocking or deadlocks if computeAsync() completes on a thread that should not be blocked (e.g., an event loop or network thread). See go/fbg-concurrency#avoid-direct-executors.
+B is poor practice; performing significant work or blocking calls like Futures.getUnchecked inside a Future listener is risky. Listeners should be very fast.
+D is incorrect because calling computeAsync().get() blocks the current thread until the future completes, negating the benefits of asynchronous programming.
+Question 4: When chaining CompletableFuture operations, when should you prefer thenCompose() over thenApply()?
+
+A) When the transformation function might throw a checked exception.
+B) When the transformation function itself returns another CompletionStage (e.g., a CompletableFuture).
+C) When you need to ensure the transformation runs on a different thread pool.
+D) When the transformation involves a purely synchronous, CPU-bound operation.
+
+Correct Answer: B) When the transformation function itself returns another CompletionStage (e.g., a CompletableFuture).
+
+Explanation: thenCompose() is specifically designed for chaining asynchronous operations where the result of one CompletableFuture is used to initiate another asynchronous computation. If your mapping function returns a CompletableFuture<U>, thenCompose() flattens this, resulting in a CompletableFuture<U>. In contrast, thenApply() would result in a nested structure: CompletableFuture<CompletableFuture<U>>.
+
+Question 5: You have three independent asynchronous operations, each returning a CompletableFuture<T>. You need to perform a final action only after all three operations have successfully completed. Which CompletableFuture method is the most appropriate for this?
+
+A) CompletableFuture.anyOf(future1, future2, future3)
+B) CompletableFuture.allOf(future1, future2, future3)
+C) Nesting thenCombine() calls: future1.thenCombine(future2, ...).thenCombine(future3, ...)
+D) Using a CyclicBarrier to wait for all completions.
+
+Correct Answer: B) CompletableFuture.allOf(future1, future2, future3)
+
+Explanation: CompletableFuture.allOf(cf1, cf2, ...) returns a new CompletableFuture<Void> that completes only when all of the input CompletableFutures have completed. This is the standard and most idiomatic way in Java 8 to wait for a set of independent asynchronous operations to finish.
+
+A (anyOf) completes as soon as any of the provided futures complete, which is not the requirement.
+C (thenCombine) is suitable for combining the results of two futures. While nesting can work for three, allOf is cleaner for simply waiting for multiple completions.
+D involves using lower-level concurrency primitives, which is less idiomatic than leveraging the built-in capabilities of CompletableFuture.
+
