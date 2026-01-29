@@ -7,3 +7,11 @@ static <U> CompletableFuture<U>	supplyAsync(Supplier<U> supplier, Executor execu
 Yes! CompletableFuture executes these tasks in a thread obtained from the global ForkJoinPool.commonPool().
 But hey, you can also create a Thread Pool and pass it to runAsync() and supplyAsync() methods 
 to let them execute their tasks in a thread obtained from your thread pool.
+
+For building asynchronous systems we should be able to attach a callback to the CompletableFuture 
+which should automatically get called when the Future completes.
+
+That way, we won’t need to wait for the result, and we can write the logic that needs to be executed 
+after the completion of the Future inside our callback function.
+   You can attach a callback to the CompletableFuture using thenApply(), thenAccept() and thenRun() methods -
+
