@@ -15,3 +15,46 @@ That way, we won’t need to wait for the result, and we can write the logic tha
 after the completion of the Future inside our callback function.
    You can attach a callback to the CompletableFuture using thenApply(), thenAccept() and thenRun() methods -
 
+You can also write a sequence of transformations on the CompletableFuture by attaching a series of thenApply() callback methods. 
+The result of one thenApply() method is passed to the next in the series -
+
+CompletableFuture<String> welcomeText = CompletableFuture.supplyAsync(() -> {
+    try {
+        TimeUnit.SECONDS.sleep(1);
+    } catch (InterruptedException e) {
+       throw new IllegalStateException(e);
+    }
+    return "Rajeev";
+}).thenApply(name -> {
+    return "Hello " + name;
+}).thenApply(greeting -> {
+    return greeting + ", Welcome to the CalliCoder Blog";
+});
+
+System.out.println(welcomeText.get());
+
+thenAccept() and thenRun()
+If you don’t want to return anything from your callback function and just want to run some piece of code after the completion of the Future, 
+then you can use thenAccept() and thenRun() methods. These methods are consumers and are often used as the last callback in the callback chain.
+
+CompletableFuture.thenAccept() takes a Consumer<T> and returns CompletableFuture<Void>. It has access to the result of the 
+CompletableFuture on which it is attached.
+
+// thenAccept() example
+CompletableFuture.supplyAsync(() -> {
+	return ProductService.getProductDetail(productId);
+}).thenAccept(product -> {
+	System.out.println("Got product detail from remote service " + product.getName())
+});
+
+While thenAccept() has access to the result of the CompletableFuture on which it is attached, 
+thenRun() doesn’t even have access to the Future’s result. It takes a Runnable and returns CompletableFuture<Void> -
+
+// thenRun() example
+CompletableFuture.supplyAsync(() -> {
+    // Run some computation  
+}).thenRun(() -> {
+    // Computation Finished.
+});
+
+
