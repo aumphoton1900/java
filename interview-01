@@ -105,3 +105,202 @@ A (anyOf) completes as soon as any of the provided futures complete, which is no
 C (thenCombine) is suitable for combining the results of two futures. While nesting can work for three, allOf is cleaner for simply waiting for multiple completions.
 D involves using lower-level concurrency primitives, which is less idiomatic than leveraging the built-in capabilities of CompletableFuture.
 
+Question 6 : 
+a java class has two static methods and also have some threads , 
+you need to invoke a static method to count number of worlds in each line of given file in separate thread. 
+so for each line you will use one thread . use thread pool to complete this task . give some code snippet
+
+
+Here's a Java code example using a thread pool and static methods to count words in each line of a file, with each line being processed in a separate task.
+
+This example provides two approaches: one using standard ExecutorService and Future, and another using CompletableFuture, which is often preferred for more modern asynchronous patterns in Java 8+.
+
+JAVA
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+
+public final class MyFileWordCounter {
+
+  // Static method to count words in a single line
+  private static int countWords(String line) {
+    if (line == null || line.trim().isEmpty()) {
+      return 0;
+    }
+    // Split by one or more whitespace characters
+    return line.trim().split("\\s+").length;
+  }
+
+  /**
+   * Processes a file line by line using an ExecutorService, submitting each line
+   * as a separate task. Returns a list of word counts for each line.
+   *
+   * <p>Each line is processed in a potentially different thread from the pool.
+   * Note: Using Executors.newCachedThreadPool() can create many threads if the file has many lines.
+   * For production systems, a fixed-size pool is often safer.
+   */
+  public static List<Integer> processFileWithExecutorService(Path filePath)
+      throws IOException, InterruptedException {
+    List<String> lines = Files.readAllLines(filePath);
+
+    // Consider using a fixed-size pool for better resource control, e.g.,
+    // Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+    // However, newCachedThreadPool aligns better with the "separate thread for each line" idea
+    // by creating threads as needed. Be cautious with very large files.
+    ExecutorService executor = Executors.newCachedThreadPool();
+
+    List<Callable<Integer>> tasks =
+        lines.stream()
+            .map(line -> (Callable<Integer>) () -> countWords(line))
+            .collect(Collectors.toList());
+
+    List<Integer> wordCounts = new ArrayList<>();
+    try {
+      // invokeAll submits all tasks and blocks until all are complete or the timeout expires.
+      List<Future<Integer>> futures = executor.invokeAll(tasks);
+
+      for (Future<Integer> future : futures) {
+        try {
+          wordCounts.add(future.get()); // Get the result of each line's word count
+        } catch (ExecutionException e) {
+          System.err.println("Error counting words in a line: " + e.getCause());
+          // Depending on requirements, you might re-throw, log, or add a sentinel value.
+          wordCounts.add(0); // Add 0 for failed lines
+        }
+      }
+    } finally {
+      // Always shut down the executor to release resources.
+      executor.shutdown();
+      if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+        System.err.println("Executor did not terminate gracefully within 60 seconds.");
+        executor.shutdownNow(); // Force shutdown
+      }
+    }
+    return wordCounts;
+  }
+
+  /**
+   * Processes a file line by line asynchronously using CompletableFuture.
+   * Each line's word count is a CompletableFuture, executed in a provided Executor.
+   * This approach is generally more idiomatic for asynchronous Java in modern applications.
+   *
+   * <p>Google's internal guidance often recommends using Guava's ListenableFuture
+   * or frameworks like PromiseGraph for asynchronous operations in production services
+   * over direct CompletableFuture usage, especially due to CompletableFuture's mutable nature
+   * and error-prone defaults. See go/completablefuture and go/android-api-guidelines#classes-avoid-future.
+   */
+  public static List<Integer> processFileWithCompletableFuture(Path filePath)
+      throws IOException, InterruptedException, ExecutionException {
+    List<String> lines = Files.readAllLines(filePath);
+
+    // It's crucial to use a specific Executor for CompletableFuture.supplyAsync
+    // to avoid running on the ForkJoinPool.commonPool() which can be problematic.
+    ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+    List<CompletableFuture<Integer>> futures =
+        lines.stream()
+            .map(line -> CompletableFuture.supplyAsync(() -> countWords(line), executor))
+            .collect(Collectors.toList());
+
+    // allOf creates a CompletableFuture<Void> that completes when all input futures complete.
+    CompletableFuture<Void> allFutures =
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+    // When all futures are done, transform the results.
+    CompletableFuture<List<Integer>> allDone =
+        allFutures.thenApply(
+            v -> futures.stream()
+                .map(
+                    future -> {
+                      try {
+                        return future.get(); // Get result, potentially blocking if not complete
+                      } catch (InterruptedException | ExecutionException e) {
+                         System.err.println("Error in CompletableFuture: " + e.getCause());
+                         return 0; // Handle error for this specific line
+                      }
+                    })
+                .collect(Collectors.toList()));
+
+    try {
+      return allDone.get(); // Blocks until all lines are processed. In server code, avoid blocking.
+    } finally {
+      executor.shutdown();
+      if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+        System.err.println("CompletableFuture executor did not terminate in time.");
+        executor.shutdownNow();
+      }
+    }
+  }
+
+  // Main method to demonstrate usage
+  public static void main(String[] args) {
+    Path testFile = null;
+    try {
+      // 1. Create a dummy file for testing
+      testFile = Files.createTempFile("wordcounttest", ".txt");
+      List<String> content = Arrays.asList(
+          "This is line one.",
+          "", // Empty line
+          " Line two has more words. ", // Leading/trailing spaces
+          "Four score and seven years ago.",
+          "Single"
+      );
+      Files.write(testFile, content);
+      System.out.println("Created test file: " + testFile.toString() + "\n");
+
+      // 2. Demonstrate with ExecutorService
+      System.out.println("--- Using ExecutorService ---");
+      List<Integer> counts = MyFileWordCounter.processFileWithExecutorService(testFile);
+      System.out.println("Word counts per line: " + counts);
+      System.out.println("Total words: " + counts.stream().mapToInt(Integer::intValue).sum());
+      System.out.println();
+
+      // 3. Demonstrate with CompletableFuture
+      System.out.println("--- Using CompletableFuture ---");
+      List<Integer> asyncCounts = MyFileWordCounter.processFileWithCompletableFuture(testFile);
+      System.out.println("Word counts per line: " + asyncCounts);
+      System.out.println("Total words: " + asyncCounts.stream().mapToInt(Integer::intValue).sum());
+      System.out.println();
+
+    } catch (IOException | InterruptedException | ExecutionException e) {
+      e.printStackTrace();
+    } finally {
+      // 4. Clean up the test file
+      if (testFile != null) {
+        try {
+          Files.deleteIfExists(testFile);
+          System.out.println("Deleted test file: " + testFile.toString());
+        } catch (IOException e) {
+          System.err.println("Error deleting test file: " + e.getMessage());
+        }
+      }
+    }
+  }
+}
+
+Key Google Best Practices & Considerations:
+
+Thread Pool Management: While Executors.newCachedThreadPool() was used to easily create a thread per task, 
+it's generally discouraged in production servers because it can lead to an unbounded number of threads, potentially causing OutOfMemoryError or 
+severe performance degradation. Prefer Executors.newFixedThreadPool() with a size based on available CPU cores and application needs, or use frameworks that manage thread pools efficiently.
+
+Asynchronous Programming: For new Java code at Google, especially in server frameworks like Boq/Apps Framework, 
+fully asynchronous patterns are highly recommended to avoid blocking threads, which is inefficient.
+
+ListenableFuture: Guava's ListenableFuture is often preferred over java.util.concurrent.Future and sometimes CompletableFuture because 
+it provides a robust way to add listeners and transform results without blocking.
+
+Async Frameworks: Consider using frameworks like:
+PromiseGraph: (go/promisegraph) A popular choice for asynchronous programming in Google3, especially with Apps Framework.
+Producers: (go/java-producers) Another framework for async operations.
+Kotlin Coroutines: If using Kotlin, coroutines are the idiomatic async solution.
+Static Methods: The use of static methods (countWords, processFileWithExecutorService, processFileWithCompletableFuture) is fine here as they encapsulate stateless operations on their inputs.
+
+
+
