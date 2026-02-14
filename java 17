@@ -1,0 +1,38 @@
+
+1. switch changes 
+
+Moreover, the previous version of switch statement was limited to byte, short, char, int, Byte, Character, Short, Integer, String, and Enum types. 
+The new feature allows developers to use patterns to match against the value of an object of any type
+  
+ public static String getDayOfWeek(int dayNum) {
+    String day;
+    switch (dayNum) {
+        case 1:
+            day = "Monday";
+            break;
+        case 2:
+            day = "Tuesday";
+            break;
+        case 3:
+            day = "Wednesday";
+            break;
+        case 4:
+            day = "Thursday";
+            break;
+        case 5:
+            day = "Friday";
+            break;
+        case 6:
+            day = "Saturday";
+            break;
+        case 7:
+            day = "Sunday";
+            break;
+        default:
+            day = "Invalid day";
+    }
+    return day;
+}
+
+
+
