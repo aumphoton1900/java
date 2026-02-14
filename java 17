@@ -1,3 +1,5 @@
+https://medium.com/@houssemmedine.drissi/class-vs-record-difference-between-class-and-record-in-java-75d7ea6da145
+
 
 1. switch changes 
 
@@ -33,6 +35,86 @@ The new feature allows developers to use patterns to match against the value of 
     }
     return day;
 }
+
+
+Switch Statements Since Java 12
+Since the new Java 12 features, the same code can be simplified as follows:
+
+public static String getDayOfWeek(int dayNum) {
+    return switch (dayNum) {
+        case 1 -> "Monday";
+        case 2 -> "Tuesday";
+        case 3 -> "Wednesday";
+        case 4 -> "Thursday";
+        case 5 -> "Friday";
+        case 6 -> "Saturday";
+        case 7 -> "Sunday";
+        default -> "Invalid day";
+    };
+}
+As shown in the example, since Java 12, the case statements now use the new arrow operator (->) to 
+specify the pattern and the result expression. It also eliminates the break statement at each case.
+
+====================================
+As shown in the example, since Java 12, the case statements now use the new arrow operator (->) 
+to specify the pattern and the result expression. It also eliminates the break statement at each case.
+
+Switch Statements Since Java 17
+In addition to using constant patterns, the new feature of java 17 also allows developers 
+to use variable patterns and type patterns. 
+A variable pattern allows you to match against a specific value and assign it to a variable. 
+A type pattern allows you to match against the type of a value.
+
+Here is an example that demonstrates the use of variable and type patterns:
+
+//Record class for CreditCardPayment
+record CreditCardPayment(String cardNumber) {}
+
+//Record class for PayPalPayment
+record PayPalPayment(String email) {}
+
+public class PaymentProcessing {
+
+    private static void processPayment(Object payment) {
+        String result = switch (payment) {
+            case CreditCardPayment cc ->
+                 "Processing Credit Card payment with card number: " + cc.cardNumber();
+            case PayPalPayment pp -> "Processing PayPal payment with email: " + pp.email();
+            case Integer amount -> "Processing Cash payment of $" + amount;
+            case null -> "Invalid payment method: null";
+            default -> "Unknown payment method.";
+        };
+        System.out.println(result);
+    }
+
+    public static void main(String[] args) {
+        processPayment(new CreditCardPayment("1234-5678-9876-5432"));
+        processPayment(new PayPalPayment("user@example.com"));
+        processPayment(500); 
+        processPayment(null); 
+    }
+}
+
+===========================================
+[ record vs class ]
+
+When to Use Which
+
+Use a record when:
+You need a simple, immutable container for a fixed set of data.
+You are creating Data Transfer Objects (DTOs) or modeling value objects.
+You want to reduce boilerplate code and improve code readability.
+The object's identity is defined solely by its data, not its memory location or unique behavior.
+
+Use a class when:
+You need mutable state (the object's fields can change after creation).
+You require a complex class hierarchy or need to extend a specific class.
+You need full control over the implementation of methods, constructors, and field visibility.
+The object represents an entity with a distinct identity and associated complex business logic or behavior. 
+
+======================================================
+
+
 
 
 
