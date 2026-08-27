@@ -1,0 +1,21 @@
+[structural]
+
+Decorator pattern is used a lot in Java IO classes, such as FileReader, BufferedReader etc.
+
+Yes, the Decorator design pattern is a core building block of the Java IO library.How the Pattern WorksIn Java IO, 
+a decorator class wraps a base component to add new behavior or responsibilities dynamically. 
+The wrapper shares the same interface as the object it wraps.Base Component: Classes like FileReader or FileInputStream read raw data 
+from a source like a file.Decorator: Classes like BufferedReader or BufferedInputStream take a base component in their constructor and
+add extra features—like memory buffering—without 
+changing the original class.Common ExamplesBufferedReader: Wraps a Reader (such as a FileReader) to read text efficiently 
+by buffering characters and adding methods like readLine().BufferedInputStream: Wraps an InputStream to add buffering for byte data, 
+which reduces disk or network reads.DataInputStream: Wraps an InputStream to let you read Java primitive types 
+(like int, float, or boolean) directly from binary data.
+
+Why Java Uses ItFlexibility: You can mix and match behaviors. You can wrap a file stream with a buffer, and then wrap that with 
+a data reader.Avoids Class Explosion: Instead of creating a unique class for every combination of features 
+(like a BufferedFileDataReader), you just combine small, focused classes.
+
+The Flyweight pattern is a software design pattern that uses sharing to support large numbers 
+of fine-grained objects efficiently.It helps save memory when your program needs to create a massive amount of similar objects. 
+Instead of keeping all data inside every single object, you share the common parts.
